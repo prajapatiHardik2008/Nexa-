@@ -13,6 +13,7 @@ import  datetime
 import requests
 import json
 import AI_NEXA
+import pyautogui as p
 # recognizer = sr.Recognizer()
 # engine = pyttsx3.init()
 #-----------------------------                                          
@@ -28,7 +29,7 @@ def Aiprocess(command):
     response = client.chat.completions.create(
     model="gpt-4o-mini",  # Fast & smart model
     messages=[
-        {"role": "system", "content": "You are a helpful AI assistant  , whose name Nexa and date of birth  24 januery 2025  made by Hardik. ,give short ans , nexa is an girl ai  assistant "},
+        {"role": "system", "content": "You are a helpful AI assistant  , whose name Nexa and date of birth  24 januery 2025  made by Hardik. ,give short ans , nexa is an girl ai  assistant} "},
         {"role": "user", "content": command}
     ]
 )
@@ -91,23 +92,53 @@ def processCommand(command):
     print(command)
     if "open google" in command.lower():
        speak("opening google ...")
-       time.sleep(2)
-       webbrowser.open("https://www.google.com")
+       time.sleep(1)
+       p.press('win')
+       time.sleep(1)
+       p.write('google',interval=0.3)
+       p.press('enter')
     elif "open chrome" in command.lower():
-       speak("opening google ...")
-       time.sleep(2)
-       webbrowser.open("https://www.chrome.com")
-
+       speak("opening chroe ...")
+       time.sleep(1)
+       p.press('win')
+       time.sleep(1)
+       p.write('chrome',interval=0.3)
+       p.press('enter')
     elif  "open facebook" in command.lower():
        speak("opening face Book ...")
        time.sleep(2)
        webbrowser.open("https://www.facebook.com")
     elif"vs code" in command.lower():
-        os.system("visual studio code ")
+        speak("Opening  visual studio code  ")
+        time.sleep(1)
+        p.press('win')
+        time.sleep(1)
+        p.write('vs code',interval=0.3)
+        p.press('enter')
     elif "open youtube" in command.lower():
         speak("opening youtube ...")
-        time.sleep(2)
-        webbrowser.open("https://www.youtube.com")
+        time.sleep(1)
+        p.press('win')
+        time.sleep(1)
+        p.write('You tube',interval=0.3)
+        p.press('enter')
+        speak("Sir, kya aap chahte hain ki main kuch content search karu?")
+        with sr.Microphone() as source :
+                print("listening...")
+                audio = r.listen(source,timeout=2,phrase_time_limit=1)
+                ans = r.recognize_google(audio)
+        if ans.lower() == ['yes','ha','haan'] or 'yes' in  ans.lower() or 'ha' in ans.lower():
+            speak("Bataiye, main kya search karu?")
+            with sr.Microphone() as source :
+                print("listening...")
+                audio = r.listen(source,timeout=2,phrase_time_limit=1)
+                content = r.recognize_google(audio)
+            p.press('/')
+            p.write(f"{content}",interval=0.4)
+            p.press("enter")
+            speak("Enjoy kijiye, sir!")
+        else:
+            speak("Theek hai, agar kuch aur kaam ho to bol dijiye, main yahan hoon.")
     elif "play" in command.lower():
         song_name = command.lower().replace("play ","").strip()
         if song_name in music_library.music:
@@ -157,7 +188,7 @@ def processCommand(command):
                 audio = r.listen(source)
                 city = r.recognize_google(audio)
 
-            api = "6cb7bb198e8246c7818112734251311"
+            api = AI_NEXA.weatherApi
             url = f"http://api.weatherapi.com/v1/current.json?key={api}&q={city}&aqi=no"
             response = requests.get(url)
             weather_dec = json.loads(response.text)
